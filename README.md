@@ -193,9 +193,3 @@ Route-level screens are loaded lazily with a visible loading fallback. The lates
 ## Scope and future work
 
 CrimeMap supports demonstration and educational use. Official statistics are limited to the CSV datasets shipped with the project, and submitted reports are separate user-generated records. Public NewsAPI and Photon availability depends on their external services. Future work includes a verified deployment, production monitoring, richer data provenance, browser-based accessibility and end-to-end testing, and a compatible upstream release for nodemon’s minimatch dependency.
-
-## Historical project credits
-
-CrimeMap began as a React frontend with a FastAPI backend and JSON-based authentication/report storage. That original implementation is retained in the repository as migration history and as the remaining CSV upload service; the current primary authentication and report database is PostgreSQL.
-
-Team CodeCrust: Shreya Nipunge, Kirtan Devadiga, Mayuri Gade, Shreya Dandekar, and Lata Choudhary.
