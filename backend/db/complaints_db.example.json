@@ -1,0 +1,23 @@
+{
+    "complaints": [
+        {
+            "id": "1a2b3c4d",
+            "name": "Jane Doe",
+            "phone": "9876543210",
+            "email": "jane@example.com",
+            "crime_type": "Theft",
+            "description": "Bike stolen from station parking.",
+            "location": "Central Station, Mumbai",
+            "state": "Maharashtra",
+            "district": "Mumbai City",
+            "lat": 18.9696,
+            "lng": 72.8193,
+            "status": "UNVERIFIED",
+            "confidence": "LOW",
+            "created_at": "2024-03-12T10:00:00Z",
+            "reviewed_at": "",
+            "admin_notes": "",
+            "user_email": "jane@example.com"
+        }
+    ]
+}

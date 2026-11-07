@@ -1,0 +1,7 @@
+district,year,lat,lng,murder,robbery,thefts,vehicle_theft,burglary,cheating,rape,crime_score
+Chandigarh,2017,30.73,76.78,25,54,551,909,129,72,65,5026
+Chandigarh,2018,30.73,76.78,20,58,541,757,140,145,86,4825
+Chandigarh,2019,30.73,76.78,26,33,320,588,87,112,112,3711
+Chandigarh,2020,30.73,76.78,22,23,196,418,59,124,60,2573
+Chandigarh,2021,30.73,76.78,17,17,299,458,58,134,74,2937
+Chandigarh,2022,30.73,76.78,18,16,319,957,71,223,78,4712

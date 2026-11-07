@@ -1,0 +1,56 @@
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Build outputs
+dist/
+build/
+build_output.txt
+
+# Logs
+*.log
+debug_output.txt
+debug_page.mjs
+debug_page_errors.mjs
+err.txt
+screenshot.mjs
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python
+venv/
+env/
+.venv/
+.pytest_cache/
+
+# Temporary files
+*.tmp
+*.swp
+
+# Runtime databases (contain sensitive user data — keep out of version control)
+# Seed files are provided as *.example.json
+backend/db/auth_db.json
+backend/db/complaints_db.json
+
+# Uploaded files (user-submitted content at runtime)
+backend/data/uploads/
+backend/uploads/
+
+.env.*
+!.env.example
+
+coverage/

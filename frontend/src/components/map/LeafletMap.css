@@ -1,0 +1,23 @@
+.leaflet-container {
+  font-family: inherit;
+}
+
+.leaflet-control-zoom a {
+  color: #e2e8f0 !important;
+  background: #0d1e38 !important;
+  border-color: #334155 !important;
+}
+
+.leaflet-control-attribution {
+  color: #cbd5e1 !important;
+  background: rgba(10, 22, 40, 0.8) !important;
+}
+
+.leaflet-control-attribution a {
+  color: #93c5fd !important;
+}
+
+.report-location-marker {
+  background: transparent;
+  border: 0;
+}

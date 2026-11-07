@@ -1,0 +1,20 @@
+.crime-detail-popup .leaflet-popup-content-wrapper,
+.crime-detail-popup .leaflet-popup-tip {
+  color: #f8fafc;
+  background: #0a1628;
+  border: 1px solid rgba(71, 85, 105, 0.85);
+  box-shadow: 0 20px 35px rgba(2, 6, 23, 0.5);
+}
+
+.crime-detail-popup .leaflet-popup-content {
+  width: max-content !important;
+  max-width: min(310px, calc(100vw - 80px));
+  margin: 12px;
+}
+
+.crime-map-marker,
+.complaint-map-marker {
+  background: transparent;
+  border: 0;
+}
+

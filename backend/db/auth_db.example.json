@@ -1,0 +1,16 @@
+{
+    "users": [
+        {
+            "email": "user@example.com",
+            "password": "$pbkdf2-sha256$29000$example_hash_replace_on_first_run$example",
+            "role": "user"
+        }
+    ],
+    "admins": [
+        {
+            "email": "admin@example.com",
+            "password": "$pbkdf2-sha256$29000$example_hash_replace_on_first_run$example",
+            "role": "admin"
+        }
+    ]
+}
