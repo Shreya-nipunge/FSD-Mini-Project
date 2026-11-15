@@ -1,14 +1,14 @@
-# CrimeMap
+# CrimeMap : 
 
 CrimeMap is a full-stack crime analytics and citizen reporting application. It combines official CSV-based crime statistics with a separate, authenticated citizen report workflow and geospatial visualization.
 
-## Problem and objectives
+## Problem and objectives : 
 
 Official district-level crime statistics, citizen-submitted reports, and geographic context are often presented in separate tools. CrimeMap brings those distinct sources into one interface so users can explore regional patterns, understand hotspots, and submit reports while administrators review them.
 
 The project objectives are to visualize official crime aggregates and citizen reports separately, provide map and chart-based analytics, support authenticated report review, protect report evidence and reporter privacy, and demonstrate a React/Express/PostgreSQL full-stack application.
 
-## Features
+## Features : 
 
 - Explore official crime statistics by state, district, crime type, and year.
 - View summary analytics, trends, hotspots, safety scores, and administrative insights.
@@ -19,7 +19,7 @@ The project objectives are to visualize official crime aggregates and citizen re
 - Browse crime news through the backend NewsAPI integration.
 - Upload updated analytics CSVs through the retained FastAPI endpoint.
 
-## Technology and architecture
+## Technology and architecture : 
 
 | Area | Current implementation |
 |---|---|
@@ -35,7 +35,7 @@ Official CSV analytics remain separate from citizen-submitted reports. The Expre
 
 The project has not been deployed as part of the map migration. Production hosting, HTTPS, CORS origins, and public environment variables must be configured for the chosen host before deployment.
 
-## Repository layout
+## Repository layout : 
 
 ```text
 frontend/                 React/Vite application
@@ -46,14 +46,14 @@ docs/                     Architecture, API, audit, and migration documentation
 
 The retained FastAPI application is under `backend/app/`. Its remaining administrator CSV upload route processes CSV files into the existing per-state analytics outputs; it is not the primary auth, report, analytics, or news API.
 
-## Requirements
+## Requirements : 
 
 - Node.js 18 or newer and npm.
 - PostgreSQL for the Express API.
 - Python 3.10 or newer only when running the legacy FastAPI CSV upload service.
 - A NewsAPI key for live news results. The map does not require a Google key or paid mapping account.
 
-## Configuration
+## Configuration : 
 
 Use the ignored root `.env.local` for isolated development configuration. Keep `.env` and `.env.local` private and do not commit them. The root `.env` may point to a shared/remote database; do not run migrations, seeds, or integration tests with it.
 
@@ -79,7 +79,7 @@ Frontend variables use the `VITE_` prefix because Vite exposes them to the brows
 
 No database password, JWT secret, NewsAPI key, or Supabase service key belongs in a `VITE_` variable.
 
-## Local setup
+## Local setup : 
 
 ### Express API
 
@@ -155,7 +155,7 @@ The local isolated demo administrator is `demo.admin@example.test` with database
 
 Before public deployment, configure a strong shared `JWT_SECRET`, an explicit production `CLIENT_ORIGIN`, and HTTPS for remote FastAPI-to-Express communication. Configure the Express `HOST` and platform `PORT` intentionally, place both services behind the intended network boundary, and complete browser-based report/evidence/admin-flow verification. HTTPS termination and deployment settings have not been verified here.
 
-## Tests and build
+## Tests and build : 
 
 ```powershell
 npm test --prefix frontend
@@ -174,7 +174,7 @@ python -m pytest backend/tests/test_fastapi_security.py -q -p no:cacheprovider
 
 The integration suite verifies the database target before writing, creates synthetic test accounts/reports and temporary evidence files, then cleans up only records and files created by the tests. It does not reset tables or target deterministic demo records. FastAPI security tests use mocked service responses and temporary files; they do not connect to PostgreSQL or modify analytics datasets.
 
-## API and project documentation
+## API and project documentation : 
 
 - [Frontend integration and legacy upload configuration](./docs/FRONTEND_EXPRESS_INTEGRATION.md)
 - [Analytics and news endpoints, datasets, and response contracts](./docs/ANALYTICS_AND_NEWS.md)
@@ -188,10 +188,10 @@ Express routes are mounted under `/api`. They include authentication (`/auth/reg
 
 The remaining FastAPI upload endpoint is `POST /api/upload-csv` with multipart fields `file` and `state`; in development Vite proxies only that route to port 8000. FastAPI validates administrators through Express and does not publish an `/uploads` static route.
 
-## Performance review
+## Performance review : 
 
 Route-level screens are loaded lazily with a visible loading fallback. The latest production build reduced the largest initial JavaScript asset from about 1.38 MB to about 455 kB; analytics is emitted as a separate roughly 465 kB chunk. The large-chunk warning is gone. The build still reports stale Browserslist data; it was not updated during this task. Local analytics request timings were below 100 ms in the earlier smoke run; this is an observation, not a load test. A scoped override selects patched `uuid@11.1.1` for Sequelize. The server audit still flags nodemon’s minimatch 10.x dependency; patched minimatch 11 requires Node 20+, conflicting with documented Node 18 support.
 
-## Scope and future work
+## Scope and future work : 
 
 CrimeMap supports demonstration and educational use. Official statistics are limited to the CSV datasets shipped with the project, and submitted reports are separate user-generated records. Public NewsAPI and Photon availability depends on their external services. Future work includes a verified deployment, production monitoring, richer data provenance, browser-based accessibility and end-to-end testing, and a compatible upstream release for nodemon’s minimatch dependency.
