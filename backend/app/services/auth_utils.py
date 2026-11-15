@@ -23,6 +23,7 @@ env_path = os.getenv("ENV_FILE") or str(
 load_dotenv(dotenv_path=env_path)
 
 JWT_SECRET_MIN_BYTES = 32
+EXPRESS_AUTH_TIMEOUT_SECONDS = 90
 EXPRESS_API_URL = os.getenv("EXPRESS_API_URL", "http://127.0.0.1:5000").rstrip("/")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/login-user", auto_error=False)
 _SECRET_UNSET = object()
@@ -114,7 +115,7 @@ def proxy_auth_request(path, payload):
         response = requests.post(
             _express_endpoint(path),
             json=payload,
-            timeout=5,
+            timeout=EXPRESS_AUTH_TIMEOUT_SECONDS,
             allow_redirects=False,
         )
     except requests.RequestException as error:
@@ -160,7 +161,7 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
         response = requests.get(
             _express_endpoint("auth/me"),
             headers={"Authorization": f"Bearer {token}"},
-            timeout=5,
+            timeout=EXPRESS_AUTH_TIMEOUT_SECONDS,
             allow_redirects=False,
         )
     except requests.RequestException as error:

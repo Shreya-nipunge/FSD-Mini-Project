@@ -310,7 +310,11 @@ def get_safety_score(district: str, state: str = "Maharashtra"):
     return compute_safety_score_and_trends(data, district)
 
 @router.get("/admin/insights")
-def get_insights(state: str = "Maharashtra", year: Optional[str] = None):
+def get_insights(
+    state: str = "Maharashtra",
+    year: Optional[str] = None,
+    current_user: dict = Depends(require_admin),
+):
     data = _get_data(state)
     if year:
         data = [r for r in data if str(r.get("year")) == str(year)]
@@ -555,7 +559,7 @@ def _validate_upload_csv(path: Path, target_state: str) -> int:
                             number = float(value)
                         except ValueError as error:
                             raise HTTPException(status_code=400, detail=f"CSV contains an invalid count in {column}") from error
-                        if not math.isfinite(number) or number < 0:
+                        if not math.isfinite(number) or number < 0 or not number.is_integer():
                             raise HTTPException(status_code=400, detail=f"CSV contains an invalid count in {column}")
                 row_count += 1
                 if row[state_column].casefold() == target_state.casefold():

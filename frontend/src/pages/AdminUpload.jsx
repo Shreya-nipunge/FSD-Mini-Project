@@ -2,7 +2,8 @@
 // Admin interface to upload a new IPC crime dataset CSV and trigger reprocessing.
 
 import { useState } from 'react';
-import { getApiErrorMessage, uploadDataset } from '../services/api.js';
+import { uploadDataset } from '../services/api.js';
+import { getUploadErrorMessage, getUploadSuccessMessage } from '../services/uploadFeedback.js';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 
@@ -21,7 +22,7 @@ const ALL_STATES = [
 export default function AdminUpload() {
   const [file, setFile] = useState(null);
   const [selectedState, setSelectedState] = useState('Maharashtra');
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { logout } = useAuth();
@@ -31,13 +32,13 @@ export default function AdminUpload() {
     if (!file) return;
 
     setLoading(true);
-    setStatus('Uploading dataset...');
+    setStatus({ type: 'progress', message: 'Uploading and processing CSV...' });
 
     try {
       const result = await uploadDataset(file, selectedState);
-      setStatus(result.status ?? 'Dataset uploaded successfully.');
+      setStatus({ type: 'success', message: getUploadSuccessMessage(result) });
     } catch (err) {
-      setStatus(`Upload failed: ${getApiErrorMessage(err, 'Check the FastAPI service and try again.')}`);
+      setStatus({ type: 'error', message: getUploadErrorMessage(err) });
     } finally {
       setLoading(false);
     }
@@ -111,12 +112,17 @@ export default function AdminUpload() {
           </button>
 
           {status && (
-            <div className={`mt-6 p-4 rounded-lg text-sm border ${
-              status.includes('failed') || status.includes('error') 
+            <div
+              role={status.type === 'error' ? 'alert' : 'status'}
+              aria-live={status.type === 'error' ? 'assertive' : 'polite'}
+              className={`mt-6 p-4 rounded-lg text-sm border ${
+              status.type === 'error'
                 ? 'bg-red-500/10 border-red-500/30 text-red-400' 
-                : 'bg-green-500/10 border-green-500/30 text-green-400'
+                : status.type === 'success'
+                  ? 'bg-green-500/10 border-green-500/30 text-green-400'
+                  : 'bg-blue-500/10 border-blue-500/30 text-blue-300'
             }`}>
-              {status}
+              {status.message}
             </div>
           )}
         </form>

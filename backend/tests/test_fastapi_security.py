@@ -118,6 +118,7 @@ def test_legacy_login_routes_proxy_to_express_and_keep_bearer_response_shape(mon
     response = client.post("/api/login-admin", json={"email": "synthetic@example.test", "password": "synthetic-password"})
     assert response.status_code == 200
     assert captured["url"].endswith("/api/login-admin")
+    assert captured["timeout"] == auth_utils.EXPRESS_AUTH_TIMEOUT_SECONDS
     assert response.json()["access_token"] == "synthetic-express-token"
     assert response.json()["email"] == "synthetic@example.test"
     assert response.json()["role"] == "admin"
@@ -160,6 +161,7 @@ def test_current_express_admin_role_can_review_verify_and_reject(monkeypatch, tm
     statuses = {row["id"]: row["status"] for row in json.loads(complaint_file.read_text(encoding="utf-8"))["complaints"]}
     assert statuses == {"review-id": "UNDER_REVIEW", "verify-id": "VERIFIED", "reject-id": "REJECTED"}
     assert captured["url"].endswith("/api/auth/me")
+    assert captured["timeout"] == auth_utils.EXPRESS_AUTH_TIMEOUT_SECONDS
 
 
 def test_legacy_my_reports_filter_uses_current_express_email(monkeypatch, tmp_path):
@@ -389,6 +391,7 @@ def test_csv_upload_runs_real_processor_only_in_temporary_directories(monkeypatc
         ("Maharashtra", "no-counts.csv", "year,state_name,district_name\n2024,Maharashtra,Pune\n", 400),
         ("Maharashtra", "malformed.csv", "year,state_name,district_name,murder\n2024,Maharashtra\n", 400),
         ("Maharashtra", "bad-count.csv", "year,state_name,district_name,murder\n2024,Maharashtra,Pune,nope\n", 400),
+        ("Maharashtra", "fractional-count.csv", "year,state_name,district_name,murder\n2024,Maharashtra,Pune,1.5\n", 400),
     ],
 )
 def test_csv_upload_rejects_unsafe_state_and_invalid_csv_before_processing(
@@ -454,6 +457,22 @@ def test_sensitive_upload_path_is_not_publicly_mounted(tmp_path):
     assert response.status_code == 404
 
 
+def test_health_endpoints_are_available_without_authentication():
+    client = TestClient(create_app(["https://frontend.example.test"]))
+    assert client.get("/health").json() == {"status": "ok"}
+    assert client.get("/api/health").json() == {"status": "ok"}
+
+
+@pytest.mark.parametrize(("role", "expected_status"), [("user", 403), ("admin", 200)])
+def test_admin_insights_requires_current_administrator(monkeypatch, role, expected_status):
+    fake_identity(monkeypatch, role=role, user_id="express-user-uuid")
+    response = TestClient(create_app(["http://localhost:5173"])).get(
+        "/api/admin/insights",
+        headers={"Authorization": f"Bearer {synthetic_express_token(role=role)}"},
+    )
+    assert response.status_code == expected_status
+
+
 def test_cors_allows_only_configured_origins_and_never_wildcards():
     client = TestClient(create_app(["https://frontend.example.test"]))
     allowed = client.options(
@@ -476,4 +495,11 @@ def test_cors_allows_only_configured_origins_and_never_wildcards():
     assert "access-control-allow-origin" not in denied.headers
     with pytest.raises(RuntimeError):
         create_app(["*"])
+
+
+def test_production_cors_origin_is_the_vercel_frontend(monkeypatch):
+    monkeypatch.setenv("CLIENT_ORIGIN", "https://crimemap-five.vercel.app")
+    assert create_app().user_middleware[0].kwargs["allow_origins"] == [
+        "https://crimemap-five.vercel.app"
+    ]
 

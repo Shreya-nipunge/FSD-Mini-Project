@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getLegacyApiUrl } from "./uploadFeedback.js";
 
 const trimSlash = (value = "") => value.replace(/\/+$/, "");
 const API_BASE_URL = `${trimSlash(import.meta.env.VITE_API_URL || "")}/api`;
@@ -83,10 +84,7 @@ export const updateComplaintStatus = (id, status = "VERIFIED", reason = null) =>
 // CSV ingestion remains on the legacy FastAPI service. During Vite development,
 // /api/upload-csv has a dedicated proxy; production must configure this URL.
 export const uploadDataset = async (file, state) => {
-  const legacyUrl = trimSlash(import.meta.env.VITE_LEGACY_API_URL || "");
-  if (import.meta.env.PROD && !legacyUrl) {
-    throw new Error("CSV upload still requires the legacy FastAPI service. Configure VITE_LEGACY_API_URL.");
-  }
+  const legacyUrl = getLegacyApiUrl(import.meta.env.VITE_LEGACY_API_URL, import.meta.env.PROD);
   const formData = new FormData();
   formData.append("file", file);
   formData.append("state", state);

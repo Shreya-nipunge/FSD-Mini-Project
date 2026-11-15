@@ -135,9 +135,11 @@ python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 
 The admin upload UI sends an Express JWT to FastAPI. CSV upload requires the FastAPI service and the matching JWT configuration. Express is still the backend for authentication, reports, analytics, and news.
 
+For the production Render and Vercel setup, required service variables, auth flow, storage behavior, and an ordered deployment checklist, see [FastAPI Render Deployment](docs/FASTAPI_RENDER_DEPLOYMENT.md).
+
 #### FastAPI security status
 
-The retained FastAPI service has these implemented security changes, covered by the focused security and CSV suite (34 tests):
+The retained FastAPI service has these implemented security changes, covered by the focused security and CSV suite (39 tests):
 
 - Administrator self-registration is disabled.
 - Legacy report review, verification, rejection, and rejected-report listing require administrator authorization validated through Express.

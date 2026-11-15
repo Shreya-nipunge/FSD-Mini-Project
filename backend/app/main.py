@@ -16,7 +16,7 @@ from .routes import router
 
 
 def get_cors_origins():
-    configured = os.getenv("CLIENT_ORIGIN", "http://localhost:5173")
+    configured = os.getenv("CLIENT_ORIGIN", "https://crimemap-five.vercel.app")
     origins = [origin.strip().rstrip("/") for origin in configured.split(",") if origin.strip()]
     if not origins or "*" in origins:
         raise RuntimeError("CLIENT_ORIGIN must contain explicit browser origins; wildcard CORS is not allowed")
@@ -55,6 +55,12 @@ def create_app(cors_origins=None):
             states = list(json.loads(coords_file.read_text(encoding="utf-8")).keys())
             return {"states": sorted(states), "total": len(states)}
         return {"states": [], "total": 0}
+
+    @application.get("/health")
+    @application.get("/api/health")
+    def health_check():
+        """Lightweight liveness endpoint for Render and local smoke checks."""
+        return {"status": "ok"}
 
     return application
 
